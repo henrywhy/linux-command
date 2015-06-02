@@ -31,6 +31,6 @@ int main(int argc, char * argv[])
 
 void show_record(struct utmp * p)
 {
-	puts(p->ut_user);
+	printf("%s   %s\n", p->ut_user, p->ut_host);
 }
 
