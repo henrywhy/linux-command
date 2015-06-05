@@ -27,6 +27,7 @@ int main(int argc, char * argv[])
 
 	//must close the utmp file
 	close(fd);
+	return 0;
 }
 
 void show_record(struct utmp * p)
