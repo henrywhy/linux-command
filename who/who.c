@@ -6,6 +6,7 @@
 #include <utmp.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <time.h>
 
 void show_record(struct utmp * p);
 
@@ -32,6 +33,11 @@ int main(int argc, char * argv[])
 
 void show_record(struct utmp * p)
 {
-	printf("%s   %s\n", p->ut_user, p->ut_host);
+	if(p->ut_type != USER_PROCESS) {
+		return;  //not user, don't show login information
+	}
+	time_t time_s = p->ut_tv.tv_sec;
+	struct tm * login_time = localtime(&time_s);	
+	printf("%-9s%-13s%d-%02d-%02d %02d:%02d (%s)\n", p->ut_user, p->ut_line, login_time->tm_year+1900, login_time->tm_mon+1, login_time->tm_mday, login_time->tm_hour, login_time->tm_min, p->ut_host);
 }
 
