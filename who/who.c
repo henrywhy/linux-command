@@ -8,13 +8,16 @@
 #include <fcntl.h>
 #include <time.h>
 
+#define BUFFERSIZE 10
+
 void show_record(struct utmp * p);
 
 int main(int argc, char * argv[])
 {
-	struct utmp cur_record;
-	int buffer_size = sizeof(cur_record);
+	struct utmp records[BUFFERSIZE]; // use buffer tech
 	int fd; //file descriptor
+	int count;	
+	int i;
 
 	fd = open("/var/run/utmp", O_RDONLY);	
 	if(fd == -1) {
@@ -22,8 +25,10 @@ int main(int argc, char * argv[])
 		return 1;
 	}
 
-	while(read(fd, &cur_record, buffer_size)) {
-		show_record(&cur_record);	
+	while(count = read(fd, records, sizeof(records))) {
+		for(i=0; i<count/sizeof(struct utmp); ++i) {
+			show_record(&records[i]);	
+		}
 	}
 
 	//must close the utmp file
