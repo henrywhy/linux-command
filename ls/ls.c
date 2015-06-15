@@ -34,6 +34,7 @@ int do_ls(char * dir_name)
 		while(cur_entry = readdir(dir)) {
 			printf("%s\n", cur_entry->d_name);
 		}
+		closedir(dir);
 		return 1;	
 	}
 }
