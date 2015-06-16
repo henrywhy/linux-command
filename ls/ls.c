@@ -32,6 +32,10 @@ int do_ls(char * dir_name)
 		return 0; // open dir error	
 	} else {
 		while(cur_entry = readdir(dir)) {
+			if(cur_entry->d_name[0] == '.') {
+				//pass . .. .*
+				continue;
+			}
 			printf("%s\n", cur_entry->d_name);
 		}
 		closedir(dir);
