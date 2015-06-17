@@ -2,6 +2,7 @@
 #include <dirent.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <pwd.h>
 
 int do_ls(const char * dir_name, int show_status);
 
@@ -44,6 +45,7 @@ int do_ls(const char * dir_name, int show_status)
 	DIR * dir;
 	struct dirent * cur_entry;
 	struct stat status;
+	struct passwd * user_info;
 	char buffer[512];
 	dir = opendir(dir_name);
 	if(dir == NULL) {
@@ -61,7 +63,8 @@ int do_ls(const char * dir_name, int show_status)
 				strcpy(buffer, dir_name);
 				strcat(buffer, "/");
 				stat(strcat(buffer, cur_entry->d_name), &status);
-				printf("%d %d %s\n", status.st_nlink, status.st_size, cur_entry->d_name);	
+				user_info = getpwuid(status.st_uid);
+				printf("%d %s %d %s\n", status.st_nlink, user_info->pw_name, status.st_size, cur_entry->d_name);	
 			}
 		}
 		closedir(dir);
