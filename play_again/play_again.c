@@ -1,13 +1,23 @@
 #include <stdio.h>
+#include <termios.h>
 
 //0->yes  1->no
 int get_response(const char * question);
 
 int main(int argc, char * argv[])
 {
+	struct termios original_setting, tmp_setting;
+	tcgetattr(0, &original_setting);
+	tcgetattr(0, &tmp_setting);
+	tmp_setting.c_lflag &= ~ICANON;
+	tmp_setting.c_cc[VMIN] = 1;
+	tcsetattr(0, TCSANOW, &tmp_setting);
+	
 	char question[] = "play again?";
 	int response;
 	response = get_response(question);
+
+	tcsetattr(0, TCSANOW, &original_setting);
 	return response;
 }
 
