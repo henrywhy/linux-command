@@ -10,15 +10,17 @@ int main(int argc, char * argv[])
 	tcgetattr(0, &original_setting);
 	tcgetattr(0, &tmp_setting);
 	tmp_setting.c_lflag &= ~ICANON;
+	tmp_setting.c_lflag &= ~ECHO;
 	tmp_setting.c_cc[VMIN] = 1;
 	tcsetattr(0, TCSANOW, &tmp_setting);
 	
 	char question[] = "play again?";
 	int response;
 	response = get_response(question);
+	printf("\n%d\n", response);	
 
 	tcsetattr(0, TCSANOW, &original_setting);
-	return response;
+	return 0;
 }
 
 int get_response(const char * question)
